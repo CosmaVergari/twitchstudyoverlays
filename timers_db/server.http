@@ -1,0 +1,23 @@
+GET http://localhost:3001/time
+
+###
+GET http://localhost:3001/time/elapsed
+
+
+###
+GET http://localhost:3001/time/elapsed/reset
+
+
+###
+GET http://localhost:3001/time/elapsed/toggle
+
+###
+GET http://localhost:3001/time/pomodoro
+
+
+###
+GET http://localhost:3001/time/pomodoro/reset
+
+
+###
+GET http://localhost:3001/time/pomodoro/toggle
