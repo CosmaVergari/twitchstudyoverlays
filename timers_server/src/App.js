@@ -14,6 +14,7 @@ function App() {
   const [pomodoroStatus, setPomodoroStatus] = useState("FOCUS");
   const [pomodoroTime, setPomodoroTime] = useState(0);
   const [play] = useSound(dingSfx);
+  const [intervalInstalled, setIntervalInstalled] = useState(false);
 
   const CONFIG = {
     pomodoro: {
@@ -48,21 +49,25 @@ function App() {
   }
 
   useEffect(() => {
-    setInterval(() => {
-      fetch("http://localhost:3000/time")
-        .then((res) => res.json())
-        .then((time) => {
-          setElapsedTime(time.elapsedTime);
-          setPomodoroStatus(oldStatus => {
-            if (oldStatus !== time.pomodoroStatus) {
-              play();
-            }
-            return time.pomodoroStatus;
+    if (!intervalInstalled) {
+      setInterval(() => {
+        fetch("http://localhost:3000/time")
+          .then((res) => res.json())
+          .then((time) => {
+            console.log("Hello");
+            setElapsedTime(time.elapsedTime);
+            setPomodoroStatus(oldStatus => {
+              if (oldStatus !== time.pomodoroStatus) {
+                play();
+              }
+              return time.pomodoroStatus;
+            });
+            setPomodoroTime(time.pomodoroTime);
           });
-          setPomodoroTime(time.pomodoroTime);
-        });
-    }, 1000);
-  }, [play]);
+      }, 1000);
+      setIntervalInstalled(true);
+    }
+  }, [play, intervalInstalled]);
 
   let pomodoroColor, pomodoroText, pomodoroMaxValue, pomodoroValue;
   if (pomodoroStatus === "FOCUS") {
