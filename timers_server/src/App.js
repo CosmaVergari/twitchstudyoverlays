@@ -6,11 +6,14 @@ import {
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import dingSfx from "./sounds/ding.wav";
+import useSound from "use-sound";
 
 function App() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [pomodoroStatus, setPomodoroStatus] = useState("FOCUS");
   const [pomodoroTime, setPomodoroTime] = useState(0);
+  const [play] = useSound(dingSfx);
 
   const CONFIG = {
     pomodoro: {
@@ -50,11 +53,16 @@ function App() {
         .then((res) => res.json())
         .then((time) => {
           setElapsedTime(time.elapsedTime);
-          setPomodoroStatus(time.pomodoroStatus);
+          setPomodoroStatus(oldStatus => {
+            if (oldStatus !== time.pomodoroStatus) {
+              play();
+            }
+            return time.pomodoroStatus;
+          });
           setPomodoroTime(time.pomodoroTime);
         });
     }, 1000);
-  }, []);
+  }, [play]);
 
   let pomodoroColor, pomodoroText, pomodoroMaxValue, pomodoroValue;
   if (pomodoroStatus === "FOCUS") {
