@@ -15,21 +15,20 @@ function App() {
   const [pomodoroTime, setPomodoroTime] = useState(0);
   const [play] = useSound(dingSfx);
   const [intervalInstalled, setIntervalInstalled] = useState(false);
-
-  const CONFIG = {
+  const [CONFIG, setCONFIG] = useState({
     pomodoro: {
       focusTime: 25 * 60,
       shortBreakTime: 5 * 60,
-      longBreakTime: 15 * 60,
+      longBreakTime: 15 * 0,
       focusColor: "red",
       shortBreakColor: "green",
       longBreakColor: "blue",
       focusText: "Focus",
       shortBreakText: "Pausa",
-      longBreakText: "Pausa lunga"
+      longBreakText: "Pausa lunga",
     },
     elapsed: { studyGoal: 3 * 60 * 60 },
-  };
+  });
 
   function secondsToString(seconds) {
     const ss = pad2digits(seconds % 60);
@@ -54,9 +53,8 @@ function App() {
         fetch("http://localhost:3000/time")
           .then((res) => res.json())
           .then((time) => {
-            console.log("Hello");
             setElapsedTime(time.elapsedTime);
-            setPomodoroStatus(oldStatus => {
+            setPomodoroStatus((oldStatus) => {
               if (oldStatus !== time.pomodoroStatus) {
                 play();
               }
@@ -69,20 +67,36 @@ function App() {
     }
   }, [play, intervalInstalled]);
 
+  useEffect(() => {
+    fetch("/time/config")
+      .then((res) => res.json())
+      .then((conf) =>
+        setCONFIG((oldConfig) => {
+          return {
+            ...oldConfig,
+            pomodoro: {
+              ...oldConfig.pomodoro,
+              focusTime: conf.focusTime,
+              shortBreakTime: conf.shortBreakTime,
+              longBreakTime: conf.longBreakTime,
+            },
+          };
+        })
+      );
+  }, []);
+
   let pomodoroColor, pomodoroText, pomodoroMaxValue, pomodoroValue;
   if (pomodoroStatus === "FOCUS") {
     pomodoroColor = CONFIG.pomodoro.focusColor;
     pomodoroText = CONFIG.pomodoro.focusText;
     pomodoroValue = CONFIG.pomodoro.focusTime - pomodoroTime;
     pomodoroMaxValue = CONFIG.pomodoro.focusTime;
-  }
-  else if (pomodoroStatus === "SHORTBREAK")  {
+  } else if (pomodoroStatus === "SHORTBREAK") {
     pomodoroColor = CONFIG.pomodoro.shortBreakColor;
     pomodoroText = CONFIG.pomodoro.shortBreakText;
     pomodoroValue = CONFIG.pomodoro.shortBreakTime - pomodoroTime;
     pomodoroMaxValue = CONFIG.pomodoro.shortBreakTime;
-  }
-  else {
+  } else {
     pomodoroColor = CONFIG.pomodoro.longBreakColor;
     pomodoroText = CONFIG.pomodoro.longBreakText;
     pomodoroValue = CONFIG.pomodoro.longBreakTime - pomodoroTime;
@@ -92,23 +106,24 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <CircularProgressbarWithChildren
-          maxValue={CONFIG.elapsed.studyGoal}
-          value={elapsedTime}
-          styles={buildStyles({
-            pathColor: "#FA704B",
-            trailColor: "#FEF2CC",
-          })}
-        >
-          <p style={{ color: "#FA704B", fontSize: "4vmin" }}>
-            <strong>Studio di oggi</strong>
-            <br />
-            <span style={{ fontSize: "5vmin", fontFamily: "Nova Slim" }}>
-              {secondsToString(elapsedTime)}
-            </span>
-          </p>
-        </CircularProgressbarWithChildren>
-        <br />
+        <div style={{ paddingRight: "5%" }}>
+          <CircularProgressbarWithChildren
+            maxValue={CONFIG.elapsed.studyGoal}
+            value={elapsedTime}
+            styles={buildStyles({
+              pathColor: "#FA704B",
+              trailColor: "#FEF2CC",
+            })}
+          >
+            <p style={{ color: "#FA704B", fontSize: "4vmin" }}>
+              <strong>{/*Studio di oggi*/}</strong>
+              <br />
+              <span style={{ fontSize: "5vmin", fontFamily: "Nova Slim" }}>
+                {secondsToString(elapsedTime)}
+              </span>
+            </p>
+          </CircularProgressbarWithChildren>
+        </div>
         <CircularProgressbarWithChildren
           maxValue={pomodoroMaxValue}
           value={pomodoroValue}
@@ -117,7 +132,7 @@ function App() {
             trailColor: "#FEF2CC",
           })}
         >
-          <p style={{fontSize: "5vmin", color: pomodoroColor}}>
+          <p style={{ fontSize: "5vmin", color: pomodoroColor }}>
             <span
               style={{
                 color: "#FA704B",

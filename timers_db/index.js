@@ -23,8 +23,6 @@ let pomodoroOn = false;
 let newElapsedPomodoro = 0;
 let oldElapsedPomodoro = 0;
 
-
-
 app.get("/time", (req, res) => {
   let elapsed, pomodoro;
   if (elapsedTimeOn) elapsed = oldElapsedTime + newElapsedTime;
@@ -39,13 +37,12 @@ app.get("/time", (req, res) => {
       pomodoroStatus: pomodoroStatus,
       pomodoroTime: oldElapsedPomodoro,
     };
-  res.json({...pomodoro, elapsedTime: elapsed});
+  res.json({ ...pomodoro, elapsedTime: elapsed });
 });
 
 app.get("/time/elapsed", (req, res) => {
-  if (elapsedTimeOn)
-    time_res = (oldElapsedTime + newElapsedTime);
-  else time_res = (oldElapsedTime);
+  if (elapsedTimeOn) time_res = oldElapsedTime + newElapsedTime;
+  else time_res = oldElapsedTime;
   res.json({ time: time_res });
 });
 
@@ -72,12 +69,12 @@ app.get("/time/pomodoro", (req, res) => {
   if (pomodoroOn)
     time_res = {
       status: pomodoroStatus,
-      time: (oldElapsedPomodoro + newElapsedPomodoro),
+      time: oldElapsedPomodoro + newElapsedPomodoro,
     };
   else
     time_res = {
       status: pomodoroStatus,
-      time: (oldElapsedPomodoro),
+      time: oldElapsedPomodoro,
     };
   res.json(time_res);
 });
@@ -147,6 +144,14 @@ setInterval(() => {
     newElapsedPomodoro = 0;
   }
 }, 1000);
+
+app.get("/time/config", (req, res) => {
+  res.json({
+    focusTime: config.pomodoro.focusTime,
+    shortBreakTime: config.pomodoro.shortBreak,
+    longBreakTime: config.pomodoro.longBreak,
+  });
+});
 
 app.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)

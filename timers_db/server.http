@@ -21,3 +21,6 @@ GET http://localhost:3001/time/pomodoro/reset
 
 ###
 GET http://localhost:3001/time/pomodoro/toggle
+
+###
+GET http://localhost:3001/time/config
