@@ -116,7 +116,7 @@ function App() {
             })}
           >
             <p style={{ color: "#FA704B", fontSize: "4vmin" }}>
-              <strong>{/*Studio di oggi*/}</strong>
+              <strong>Studio di oggi</strong>
               <br />
               <span style={{ fontSize: "5vmin", fontFamily: "Nova Slim" }}>
                 {secondsToString(elapsedTime)}
