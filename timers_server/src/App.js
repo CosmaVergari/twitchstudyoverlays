@@ -28,6 +28,7 @@ function App() {
       longBreakText: "Pausa lunga",
     },
     elapsed: { studyGoal: 3 * 60 * 60 },
+    verticalLayout: true
   });
 
   function secondsToString(seconds) {
@@ -105,8 +106,8 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <div style={{ paddingRight: "5%" }}>
+      <header className={CONFIG.verticalLayout ? "App-header-vertical" : "App-header-horizontal"}>
+        <div style={{ padding: "3%"}}>
           <CircularProgressbarWithChildren
             maxValue={CONFIG.elapsed.studyGoal}
             value={elapsedTime}
