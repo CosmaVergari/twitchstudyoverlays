@@ -6,7 +6,7 @@ const dayjs = require("dayjs");
 
 const config = require("./config");
 
-const PORT = 3001;
+const PORT = 3006;
 const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
@@ -65,6 +65,11 @@ app.get("/time/elapsed/reset", (req, res) => {
   res.end();
 });
 
+app.get("/time/elapsed/set", (req, res) => {
+  oldElapsedTime = parseInt(req.query.newtime, 10);
+  res.end();
+})
+
 app.get("/time/pomodoro", (req, res) => {
   if (pomodoroOn)
     time_res = {
@@ -100,6 +105,21 @@ app.get("/time/pomodoro/reset", (req, res) => {
   pomodoroStatus = "FOCUS";
   res.end();
 });
+
+app.get("/time/pomodoro/set", (req, res) => {
+  config.pomodoro.focusTime = parseInt(req.query.focustime, 10) * 60;
+  config.pomodoro.shortBreak = parseInt(req.query.shortbreaktime, 10) * 60;
+  config.pomodoro.longBreak = parseInt(req.query.longbreaktime, 10) * 60;
+  config.pomodoro.focusRoundsBeforeLongBreak = parseInt(req.query.rounds, 10);
+  res.end();
+});
+
+
+app.get("/time/pomodoro/setcount", (req, res) => {
+  pomodoroFocusCount = parseInt(req.query.count, 10);
+  res.end();
+});
+
 
 setInterval(() => {
   if (elapsedTimeOn) newElapsedTime = dayjs().diff(startTime, "seconds");

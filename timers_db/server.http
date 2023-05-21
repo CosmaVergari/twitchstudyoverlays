@@ -1,26 +1,45 @@
-GET http://localhost:3001/time
+GET http://localhost:3006/time
 
 ###
-GET http://localhost:3001/time/elapsed
-
-
-###
-GET http://localhost:3001/time/elapsed/reset
+GET http://localhost:3006/time/elapsed
 
 
 ###
-GET http://localhost:3001/time/elapsed/toggle
-
-###
-GET http://localhost:3001/time/pomodoro
+GET http://localhost:3006/time/elapsed/reset
 
 
 ###
-GET http://localhost:3001/time/pomodoro/reset
+GET http://localhost:3006/time/elapsed/toggle
+
+###
+GET http://localhost:3006/time/elapsed/set?newtime=600
+
+###
+GET http://localhost:3006/time/pomodoro
 
 
 ###
-GET http://localhost:3001/time/pomodoro/toggle
+GET http://localhost:3006/time/pomodoro/reset
+
 
 ###
-GET http://localhost:3001/time/config
+GET http://localhost:3006/time/pomodoro/toggle
+
+###
+GET http://localhost:3006/time/config
+
+###
+GET http://localhost:3006/time/pomodoro/set?focustime=50&shortbreaktime=10&longbreaktime=15&rounds=4
+
+###
+GET http://localhost:3006/time/pomodoro/set?focustime=25&shortbreaktime=5&longbreaktime=15&rounds=4
+
+###
+GET http://localhost:3006/time/pomodoro/set?focustime=15&shortbreaktime=5&longbreaktime=15&rounds=6
+
+###
+GET http://localhost:3006/time/pomodoro/set?focustime=110&shortbreaktime=15&longbreaktime=15&rounds=2
+
+
+###
+GET http://localhost:3006/time/pomodoro/setcount?count=4
